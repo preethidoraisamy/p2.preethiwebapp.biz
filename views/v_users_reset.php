@@ -10,7 +10,7 @@
 				New password: <input type='password' name='newpwd' required="required"><br>
 				Conform New password: <input type='password' name='conpwd' required="required"><br>
 	
-				<input type='Submit' value='Reset'>		
+				<input type='Submit' value='Change'>		
 		
 		</fieldset>
 	</section>
