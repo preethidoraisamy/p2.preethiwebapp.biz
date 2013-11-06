@@ -1,3 +1,4 @@
+<!-- To add the comments -->
 <form method='post' action='/posts/p_add'>
 
 	<section class="formalign">

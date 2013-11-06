@@ -1,8 +1,9 @@
 
-
+<!-- Sign up form -->
 <form method='POST' action='/users/p_signup'>
 	<section class="formalign">
 		<fieldset class="txtalign">
+			<!-- Sign Up form -->
 			<legend>Sign up</legend>
 
 				First Name <input type='text' name='first_name' required="required"><br>
@@ -15,3 +16,5 @@
 		</fieldset>
 	</section>
 </form>
+
+

@@ -7,6 +7,7 @@
         
         <?php endif; ?> 
 
+        <!-- /Landing page image -->
         <section class="techno">
                                 
                 <article>
@@ -18,13 +19,14 @@
                 </article>                               
                                 
          </section>
-         <section class="techno">
+
+         <!-- /Additional features section -->
+         <section class="features">
                 <article>
                          <h2>+ Features</h2>
-                         <h3> Reset password</h3>
                          <h3> Edit post</h3>
                          <h3> Delete post</h3>
-
+                         <h3> Change password</h3>
                 </article>      
          </section>
 

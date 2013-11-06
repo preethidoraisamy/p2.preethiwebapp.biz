@@ -18,6 +18,7 @@ class users_controller extends base_controller {
        
        # Set up the view
        $this->template->content = View::instance('v_users_signup');
+       $this->template->title   = "Sign Up";
        
        # Render the view
        echo $this->template;
@@ -29,31 +30,52 @@ class users_controller extends base_controller {
     Process the sign up form
     -------------------------------------------------------------------------------------------------*/
     public function p_signup() {
+    	#To check whether the email is already registered
+    	$q = 
+			'SELECT token 
+			FROM users
+			WHERE email = "'.$_POST['email'].'"';		
+		
+		
+		# If there was, this will return the token	   
+		$token = DB::instance(DB_NAME)->select_field($q);
+		
+		# Success
+		if($token) {
+		
+			# Display to user that we already have this user registered
+			die('Already user registered. <a href="/users/login">Log in</a>');
+		}
+		# Fail
+		else {			
 	    	    
-	    # Mark the time
-	    $_POST['created']  = Time::now();
+		    # Mark the time
+		    $_POST['created']  = Time::now();
+		    
+		    # Hash password
+		    $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+		    
+		    # Create a hashed token
+		    $_POST['token']    = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
 	    
-	    # Hash password
-	    $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
-	    
-	    # Create a hashed token
-	    $_POST['token']    = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
-	    
-	    # Insert the new user    
-	    DB::instance(DB_NAME)->insert_row('users', $_POST);
-	    
-	    # Send them to the login page
-	    Router::redirect('/users/login');
+		    # Insert the new user    
+		    DB::instance(DB_NAME)->insert_row('users', $_POST);
+ 
+		    # Send them to the login page
+		    Router::redirect('/users/login');
+	}
 	    
     }
 
-
+    
 	/*-------------------------------------------------------------------------------------------------
 	Display a form so users can login
 	-------------------------------------------------------------------------------------------------*/
     public function login() {
+    	# Display the Login page
     
-    	$this->template->content = View::instance('v_users_login');    	
+    	$this->template->content = View::instance('v_users_login');  
+    	$this->template->title   = "Login";  	
     	echo $this->template;   
        
     }
@@ -149,12 +171,13 @@ class users_controller extends base_controller {
     }
 
     /*-------------------------------------------------------------------------------------------------
-	Reset password validation
+	Change password validation
 	-------------------------------------------------------------------------------------------------*/
 	public function reset()
 	{
 		# Set up the View
 		$this->template->content = View::instance('v_users_reset');
+		$this->template->title   = "Change Password";
 						
 		# Display the view
 		echo $this->template;
@@ -178,23 +201,25 @@ class users_controller extends base_controller {
 		# If there was, this will return the token	   
 		$token = DB::instance(DB_NAME)->select_field($q);
 		
-		# Success
+		# Success when the user entered password matchs with the system
 		if($token) {
 
 			$_POST['newpwd'] = sha1(PASSWORD_SALT.$_POST['newpwd']);
 			$_POST['conpwd'] = sha1(PASSWORD_SALT.$_POST['conpwd']);
 
+			# Success when New password matchs with Confirm password
 			if($_POST['newpwd'] == $_POST['conpwd'])
 			{
 				# Update their row in the DB with the new token
 		       $data = Array(
 		       	'password' => $_POST['newpwd']
 		       );
-		       #echo "Password updated";
+		       # Update the database with new password
 		       DB::instance(DB_NAME)->update('users',$data, 'WHERE user_id ='. $this->user->user_id);
 
 		       die('Password is successfully updated. <a href="/posts/mypost/">My posts</a>');
 			}
+			# When two new password does not match
 			else
 			{
 				die('New password does not match. <a href="/users/reset/">Try again</a>');

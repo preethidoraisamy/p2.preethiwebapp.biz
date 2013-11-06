@@ -24,6 +24,8 @@ class posts_controller extends base_controller {
 	public function add() {
 		
 		$this->template->content = View::instance("v_posts_add");
+
+		$this->template->title   = "Add Post";
 		
 		echo $this->template;
 		
@@ -43,37 +45,38 @@ class posts_controller extends base_controller {
 
 		die('Posts added. <a href="/posts/mypost/">My posts</a>');
 		
-		#Router::redirect('/posts/');
 		
 	}
 	
 	/*------------------------------------------------------------------------------------------
-     delete post
+     Delete post - Posted my me
 	------------------------------------------------------------------------------------------*/
      public function delete($post_id) {
 
      	$this->template->content = View::instance('v_posts_delete');
      	$this->template->content->post_id = $post_id;
 
+     	$this->template->title   = "Delete Post";
+
      	echo $this->template;
     } 
 
     /*------------------------------------------------------------------------------------------
-     delete post
+     Delete post after confirmation - Posted my me
 	------------------------------------------------------------------------------------------*/
      public function p_delete($post_id) {
 
-     	#echo $post_id;
-
+     	
+       # Delete the selected post
        DB::instance(DB_NAME)->delete('posts','WHERE post_id ='.$post_id);
        
        # Send them back to the homepage
       	Router::redirect('/posts/mypost/');
     }        
     
-/*---------------------------------------------------------------------------------------------
-       edit post view
-*/
+    /*---------------------------------------------------------------------------------------------
+     Edit post - Posted by me
+	------------------------------------------------------------------------------------------*/
 
      public function edit($post_id) {
         # Set up view
@@ -89,15 +92,17 @@ class posts_controller extends base_controller {
                 
                 # Pass data to the view
                 $this->template->content->post = $post;
+
+                $this->template->title   = "Edit Post";
                 
                 # Render view
                 echo $this->template;
 
     }        
     
-/*---------------------------------------------------------------------------------------------
-       edit post view
-*/
+	/*---------------------------------------------------------------------------------------------
+     Edit post after confirmation - Posted by me
+	------------------------------------------------------------------------------------------*/
     public function p_edit($post_id) {
                 
                 $content = $_POST['content'];
@@ -108,14 +113,14 @@ class posts_controller extends base_controller {
         );
         
                   DB::instance(DB_NAME)->update('posts',$data, 'WHERE post_id ='.$post_id);                
-                #Router::redirect('/posts/mypost/');
-
+                
+                # To show the Psot is edited successfully
                 die('Post Edit. <a href="/posts/mypost/">My posts</a>');
                 
         }  
 
 	/*-------------------------------------------------------------------------------------------------
-	View all posts
+	View all posts I follow
 	-------------------------------------------------------------------------------------------------*/
 	public function index() {
 		
@@ -143,6 +148,8 @@ class posts_controller extends base_controller {
 		
 		# Pass $posts array to the view
 		$this->template->content->posts = $posts;
+
+		$this->template->title   = "Others Post";
 		
 		# Render view
 		echo $this->template;
@@ -150,7 +157,7 @@ class posts_controller extends base_controller {
 	}
 
 	/*-------------------------------------------------------------------------------------------------
-	View all posts
+	View all my posts
 	-------------------------------------------------------------------------------------------------*/
 	public function mypost() {
 		
@@ -178,6 +185,8 @@ class posts_controller extends base_controller {
 		
 		# Pass $posts array to the view
 		$this->template->content->posts = $posts;
+
+		$this->template->title   = "My Posts";
 		
 		# Render view
 		echo $this->template;
@@ -186,7 +195,7 @@ class posts_controller extends base_controller {
 	
 	
 	/*-------------------------------------------------------------------------------------------------
-	
+	View all the users
 	-------------------------------------------------------------------------------------------------*/
 	public function users() {
 		
@@ -211,6 +220,8 @@ class posts_controller extends base_controller {
 		# Pass data to the view
 		$this->template->content->users       = $users;
 		$this->template->content->connections = $connections;
+
+		$this->template->title   = "Users";
 		
 		# Render view
 		echo $this->template;

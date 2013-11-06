@@ -1,3 +1,5 @@
+<!-- Otheers post -->
+<!-- if I have any post -->
 <?php if(count($posts) > 0):?>
 <?php foreach($posts as $post): ?>
 
@@ -13,6 +15,8 @@
 	
 <?php endforeach; ?>
 
+
+<!-- when nothing to view -->
 <?php else: ?>
 
 <a>You have not posted anything on your wall!</a>

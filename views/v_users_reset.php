@@ -1,9 +1,10 @@
-
+<!-- e password Change form -->
 <form method='POST' action='/users/p_reset'>
 
 	<section class="formalign">
 		<fieldset class="txtalign">
-			<legend>Reset Password</legend>
+			<!-- Change password details -->
+			<legend>Change Password</legend>
 
 				Old password: <input type='password' name='oldpwd' required="required"><br>
 				New password: <input type='password' name='newpwd' required="required"><br>
