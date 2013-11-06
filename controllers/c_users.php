@@ -74,7 +74,7 @@ class users_controller extends base_controller {
 			WHERE email = "'.$_POST['email'].'"
 			AND password = "'.$_POST['password'].'"';
 		
-		echo $q;	
+		
 		
 		# If there was, this will return the token	   
 		$token = DB::instance(DB_NAME)->select_field($q);
