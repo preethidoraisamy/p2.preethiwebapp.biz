@@ -36,33 +36,41 @@ class users_controller extends base_controller {
 			FROM users
 			WHERE email = "'.$_POST['email'].'"';		
 		
-		
-		# If there was, this will return the token	   
-		$token = DB::instance(DB_NAME)->select_field($q);
-		
-		# Success
-		if($token) {
-		
-			# Display to user that we already have this user registered
-			die('Already user registered. <a href="/users/login">Log in</a>');
+		# Valid the email address
+		if(!preg_match("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$^", $_POST['email']))
+		{
+			die('Not a Valid email address. <a href="/users/signup">Sign up</a>');
 		}
-		# Fail
-		else {			
-	    	    
-		    # Mark the time
-		    $_POST['created']  = Time::now();
+		else
+		{
+			# If there was, this will return the token	   
+			$token = DB::instance(DB_NAME)->select_field($q);
+
+			
+			# Success
+			if($token) {
+			
+				# Display to user that we already have this user registered
+				die('Already user registered. <a href="/users/login">Log in</a>');
+			}
+			# Fail
+			else {			
+		    	    
+			    # Mark the time
+			    $_POST['created']  = Time::now();
+			    
+			    # Hash password
+			    $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+			    
+			    # Create a hashed token
+			    $_POST['token']    = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
 		    
-		    # Hash password
-		    $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
-		    
-		    # Create a hashed token
-		    $_POST['token']    = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
-	    
-		    # Insert the new user    
-		    DB::instance(DB_NAME)->insert_row('users', $_POST);
- 
-		    # Send them to the login page
-		    Router::redirect('/users/login');
+			    # Insert the new user    
+			    DB::instance(DB_NAME)->insert_row('users', $_POST);
+	 
+			    # Send them to the login page
+			    Router::redirect('/users/login');
+		}
 	}
 	    
     }
